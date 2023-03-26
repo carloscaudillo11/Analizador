@@ -1,6 +1,5 @@
 inicio()
-    entero total, edad;
-    real num;
+    entero total, num, edad;
     leer (edad);
     num = 13;
     total = num + edad;
