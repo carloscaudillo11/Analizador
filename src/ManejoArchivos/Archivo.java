@@ -40,7 +40,6 @@ public class Archivo{
             int i = 0;
             contarLineas();
             while ((cadena = br.readLine()) != null) {
-                
                 lineas[i] = cadena;
                 i++;
             }
