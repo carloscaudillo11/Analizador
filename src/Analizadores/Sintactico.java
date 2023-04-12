@@ -2,7 +2,7 @@ package Analizadores;
 
 import Pila.Pila;
 import Herramientas.Matriz;
-import Obj.Token;
+import Objetos.Token;
 
 /**
  *

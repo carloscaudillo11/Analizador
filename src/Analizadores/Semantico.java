@@ -1,8 +1,8 @@
 package Analizadores;
 
 import Listas.ListaSimbolos;
-import Obj.Simbolo;
-import Obj.Token;
+import Objetos.Simbolo;
+import Objetos.Token;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

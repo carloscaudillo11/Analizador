@@ -1,7 +1,7 @@
 
 package Listas;
 
-import Obj.Simbolo;
+import Objetos.Simbolo;
 import java.util.Iterator;
 
 public class ListaSimbolos {

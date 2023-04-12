@@ -1,6 +1,6 @@
 package Listas;
 
-import Obj.Token;
+import Objetos.Token;
 import java.util.Iterator;
 
 /**

@@ -1,4 +1,4 @@
-package Obj;
+package Objetos;
 /**
  *
  * @author Charl

@@ -1,6 +1,6 @@
 
 package Listas;
-import Obj.Simbolo;
+import Objetos.Simbolo;
 /**
  *
  * @author Charl

@@ -1,6 +1,6 @@
 package Analizadores;
 
-import Obj.Token;
+import Objetos.Token;
 import ManejoArchivos.Archivo;
 import ER.Regex;
 import Listas.ListaSimbolos;
