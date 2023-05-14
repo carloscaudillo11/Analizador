@@ -129,9 +129,9 @@ is divided into following sections:
                 <available file="${application.splash}"/>
             </and>
         </condition>
-        <condition property="main.class.available">
+        <condition property="Main.class.available">
             <and>
-                <isset property="main.class"/>
+                <isset property="Main.class"/>
                 <not>
                     <equals arg1="${main.class}" arg2="" trim="true"/>
                 </not>
@@ -160,9 +160,9 @@ is divided into following sections:
                 <istrue value="${do.archive}"/>
             </and>
         </condition>
-        <condition property="do.archive+main.class.available">
+        <condition property="do.archive+Main.class.available">
             <and>
-                <isset property="main.class.available"/>
+                <isset property="Main.class.available"/>
                 <istrue value="${do.archive}"/>
             </and>
         </condition>
@@ -1136,14 +1136,14 @@ is divided into following sections:
         <!-- Empty placeholder for easier customization. -->
         <!-- You can override this target in the ../build.xml file. -->
     </target>
-    <target depends="init,compile" name="-check-module-main-class">
-        <pathconvert property="main.class.file">
+    <target depends="init,compile" name="-check-module-Main-class">
+        <pathconvert property="Main.class.file">
             <string value="${main.class}"/>
             <unpackagemapper from="*" to="*.class"/>
         </pathconvert>
-        <condition property="do.module.main.class">
+        <condition property="do.module.Main.class">
             <and>
-                <isset property="main.class.available"/>
+                <isset property="Main.class.available"/>
                 <available file="${build.classes.dir}/module-info.class"/>
                 <available file="${build.classes.dir}/${main.class.file}"/>
                 <isset property="libs.CopyLibs.classpath"/>
@@ -1151,9 +1151,9 @@ is divided into following sections:
             </and>
         </condition>
     </target>
-    <target depends="-check-module-main-class" if="do.module.main.class" name="-set-module-main-class">
+    <target depends="-check-module-main-class" if="do.module.main.class" name="-set-module-Main-class">
         <taskdef classname="org.netbeans.modules.java.j2seproject.moduletask.ModuleMainClass" classpath="${libs.CopyLibs.classpath}" name="modulemainclass"/>
-        <modulemainclass failonerror="false" mainclass="${main.class}" moduleinfo="${build.classes.dir}/module-info.class"/>
+        <modulemainclass failonerror="false" mainclass="${Main.class}" moduleinfo="${build.classes.dir}/module-info.class"/>
     </target>
     <target depends="init" if="do.archive" name="-do-jar-create-manifest" unless="manifest.available">
         <tempfile deleteonexit="true" destdir="${build.dir}" property="tmp.manifest.file"/>
@@ -1229,17 +1229,17 @@ is divided into following sections:
         <condition else="" property="jar.usage.message.class.path" value=" -cp ${run.classpath.with.dist.jar}">
             <length length="0" string="${run.classpath.with.dist.jar}" when="greater"/>
         </condition>
-        <condition else="/${main.class}" property="jar.usage.message.main.class.class.selector" value="">
-            <isset property="do.module.main.class"/>
+        <condition else="/${main.class}" property="jar.usage.message.Main.class.class.selector" value="">
+            <isset property="do.module.Main.class"/>
         </condition>
-        <condition else=" ${main.class}" property="jar.usage.message.main.class" value=" -m ${module.name}${jar.usage.message.main.class.class.selector}">
+        <condition else=" ${main.class}" property="jar.usage.message.Main.class" value=" -m ${module.name}${jar.usage.message.main.class.class.selector}">
             <isset property="named.module.internal"/>
         </condition>
         <condition else="" property="jar.usage.message" value="To run this application from the command line without Ant, try:${line.separator}${platform.java}${jar.usage.message.module.path}${jar.usage.message.class.path}${jar.usage.message.main.class}">
-            <isset property="main.class.available"/>
+            <isset property="Main.class.available"/>
         </condition>
         <condition else="debug" property="jar.usage.level" value="info">
-            <isset property="main.class.available"/>
+            <isset property="Main.class.available"/>
         </condition>
         <echo level="${jar.usage.level}" message="${jar.usage.message}"/>
     </target>
@@ -1298,7 +1298,7 @@ is divided into following sections:
         <condition property="jlink.do.launcher.internal">
             <and>
                 <istrue value="${jlink.launcher}"/>
-                <isset property="main.class.available"/>
+                <isset property="Main.class.available"/>
             </and>
         </condition>
         <property name="platform.jlink" value="${jdk.home}/bin/jlink"/>
@@ -1326,7 +1326,7 @@ is divided into following sections:
                 EXECUTION SECTION
                 =================
             -->
-    <target depends="init,compile" description="Run a main class." name="run">
+    <target depends="init,compile" description="Run a Main class." name="run">
         <j2seproject1:java>
             <customize>
                 <arg line="${application.args}"/>
@@ -1340,7 +1340,7 @@ is divided into following sections:
         <fail unless="run.class">Must select one file in the IDE or set run.class</fail>
         <j2seproject1:java classname="${run.class}"/>
     </target>
-    <target depends="init,compile-test-single" name="run-test-with-main">
+    <target depends="init,compile-test-single" name="run-test-with-Main">
         <fail unless="run.class">Must select one file in the IDE or set run.class</fail>
         <j2seproject1:java classname="${run.class}" classpath="${run.test.classpath}"/>
     </target>
@@ -1352,7 +1352,7 @@ is divided into following sections:
     <target depends="init" if="netbeans.home" name="-debug-start-debugger">
         <j2seproject1:nbjpdastart name="${debug.class}"/>
     </target>
-    <target depends="init" if="netbeans.home" name="-debug-start-debugger-main-test">
+    <target depends="init" if="netbeans.home" name="-debug-start-debugger-Main-test">
         <j2seproject1:nbjpdastart classpath="${debug.test.classpath}" name="${debug.class}"/>
     </target>
     <target depends="init,compile" name="-debug-start-debuggee">
@@ -1372,11 +1372,11 @@ is divided into following sections:
         <j2seproject3:debug classname="${debug.class}"/>
     </target>
     <target depends="init,compile-single,-debug-start-debugger,-debug-start-debuggee-single" if="netbeans.home" name="debug-single"/>
-    <target depends="init,compile-test-single" if="netbeans.home" name="-debug-start-debuggee-main-test">
+    <target depends="init,compile-test-single" if="netbeans.home" name="-debug-start-debuggee-Main-test">
         <fail unless="debug.class">Must select one file in the IDE or set debug.class</fail>
         <j2seproject3:debug classname="${debug.class}" classpath="${debug.test.classpath}"/>
     </target>
-    <target depends="init,compile-test-single,-debug-start-debugger-main-test,-debug-start-debuggee-main-test" if="netbeans.home" name="debug-test-with-main"/>
+    <target depends="init,compile-test-single,-debug-start-debugger-main-test,-debug-start-debuggee-main-test" if="netbeans.home" name="debug-test-with-Main"/>
     <target depends="init" name="-pre-debug-fix">
         <fail unless="fix.includes">Must set fix.includes</fail>
         <property name="javac.includes" value="${fix.includes}.java"/>
@@ -1470,7 +1470,7 @@ is divided into following sections:
         <startprofiler/>
         <antcall target="test-single"/>
     </target>
-    <target depends="-profile-check" description="Profile a selected class in the IDE." if="profiler.configured" name="profile-test-with-main">
+    <target depends="-profile-check" description="Profile a selected class in the IDE." if="profiler.configured" name="profile-test-with-Main">
         <fail unless="run.class">Must select one file in the IDE or set run.class</fail>
         <startprofiler/>
         <antcall target="run-test-with-main"/>

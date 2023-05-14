@@ -1,4 +1,4 @@
-S -> inicio ( ) C fin ( ) 
+S -> inicio ( ) C fin ( )
 C -> V L OP E 
 V -> T Id D ; V
 V -> 
@@ -6,7 +6,7 @@ D -> , Id D
 D -> 
 OP -> Id = Q A ; OP
 OP ->
-A -> OA Q
+A -> OA Q A
 A ->  
 Q -> Entero
 Q -> Real

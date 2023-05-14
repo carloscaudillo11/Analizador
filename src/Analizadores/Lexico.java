@@ -1,102 +1,93 @@
 package Analizadores;
 
-import Objetos.Token;
-import ManejoArchivos.Archivo;
+import Objects.Token;
+import FilesManagement.File;
 import ER.Regex;
-import Listas.ListaSimbolos;
-import Listas.ListaTokens;
-import java.io.IOException;
+import Lists.TokensList;
+
 import java.util.Hashtable;
 import java.util.Map;
 
 public class Lexico {
 
-    private final Archivo archivo;
-    private final String[] lineas;
-    private final Token[] Arreglo;
+    private final String[] lines;
+    private final Token[] array;
     public final Regex regex;
-    private final Map<String, Integer> atributos;
+    private final Map<String, Integer> attributes;
     private final Map<String, String> tipoDato;
-    private int contador, index, line, atributo, bandera;
-    public ListaTokens tokens, errores;
-    public ListaSimbolos ts;
+    private int count, index, line, attribute, flag;
+    public TokensList tokens, errors;
 
-    public Lexico() throws IOException {
-        this.archivo = new Archivo();
+    public Lexico(){
+        File file = new File();
+        String ruta = "src/Tools/code.txt";
+        file.openFile(ruta);
         this.regex = new Regex();
-        this.Arreglo = new Token[1000];
-        this.archivo.abrirArchivo();
-        this.lineas = archivo.leerArchivo();
-        this.tokens = new ListaTokens();
-        this.errores = new ListaTokens();
-        this.contador = 0;
-        this.atributo = 500;
+        this.array = new Token[1000];
+        this.lines = file.readFile();
+        this.tokens = new TokensList();
+        this.errors = new TokensList();
+        this.count = 0;
+        this.attribute = 500;
         this.line = 0;
-        this.bandera = 0;
-        this.atributos = new Hashtable();
-        this.tipoDato = new Hashtable();
-        this.ts = new ListaSimbolos();
-    }
-    
-    public ListaTokens getErrores() {
-        return errores;
+        this.flag = 0;
+        this.attributes = new Hashtable<>();
+        this.tipoDato = new Hashtable<>();
     }
 
-    public void analizar() {
-        for (String linea : lineas) {
+    public TokensList getErrors() {
+        return errors;
+    }
+
+    public void analyze() {
+        for (String linea : lines) {
             line++;
             afd(linea);
         }
     }
 
-    public void imprimirTablaTokens() {
+    public void printTokensTable() {
         System.out.println("---------------------------------TOKENS-------------------------------------------");
         System.out.println("-----------------------------------------------------------------------------------");
         System.out.printf("%10s%17s%25s%11s%10s%n", "LEXEMA", "TOKEN", "CLASIFICACION", "ATRIBUTO", "LINEA");
         System.out.println("-----------------------------------------------------------------------------------");
-        tokens.listarTokens();
+        tokens.printTokens();
         System.out.println("------------------------------------------------------------------------------------");
     }
-    
 
-    private int generaAtributo(String lexema) {
+
+    private int generateAttribute(String lexema) {
         int a = 0;
         switch (lexema) {
-            case "inicio" ->
-                a = 401;
-            case "entero" ->
-                a = 402;
-            case "real" ->
-                a = 403;
-            case "leer" ->
-                a = 404;
-            case "escribir" ->
-                a = 405;
-            case "fin" ->
-                a = 406;
+            case "inicio" -> a = 401;
+            case "entero" -> a = 402;
+            case "real" -> a = 403;
+            case "leer" -> a = 404;
+            case "escribir" -> a = 405;
+            case "fin" -> a = 406;
         }
         return a;
     }
 
-    private int generaAtributoVariable(String lexema) {
-        if (atributos.containsKey(lexema)) {
-            atributo = atributos.get(lexema);
+    private int generateAttributeId(String lexema) {
+        if (attributes.containsKey(lexema)) {
+            attribute = attributes.get(lexema);
         } else {
-            atributos.put(lexema, atributo);
+            attributes.put(lexema, attribute);
         }
-        atributo++;
-        return atributo;
+        attribute++;
+        return attribute;
     }
 
-    private String generaTipoDato(String lexema) {
-        String tipo ="";
+    private String generateDataType(String lexema) {
+        String tipo = "";
         if (tipoDato.containsKey(lexema)) {
             tipo = tipoDato.get(lexema);
         } else {
-            if (bandera == 1) {
+            if (flag == 1) {
                 tipoDato.put(lexema, "Entero");
                 tipo = "Entero";
-            } else if(bandera == 2) {
+            } else if (flag == 2) {
                 tipoDato.put(lexema, "Real");
                 tipo = "Real";
             }
@@ -104,55 +95,42 @@ public class Lexico {
         return tipo;
     }
 
-    private String generaDescripcion(String lexema){
+    private String generateDescription(String lexema) {
         String clasificacion;
         switch (lexema) {
-            case "inicio" ->
-                clasificacion = "Iniciar Programa";
+            case "inicio" -> clasificacion = "Iniciar Programa";
             case "entero" -> {
                 clasificacion = "Tipo de Dato";
-                bandera = 1;
+                flag = 1;
             }
             case "real" -> {
                 clasificacion = "Tipo de Dato";
-                bandera = 2;
+                flag = 2;
             }
-            case "leer" ->
-                clasificacion = "Funcion";
-            case "escribir" ->
-                clasificacion = "Funcion";
-            case "fin" ->
-                clasificacion = "Fin del Programa";
-            case "+" ->
-                clasificacion = "Operador Suma";
-            case "-" ->
-                clasificacion = "Operador Resta";
-            case ":" ->
-                clasificacion = "Doble punto";
-            case "(" ->
-                clasificacion = "Parentesis que Abre";
-            case ")" ->
-                clasificacion = "Parentesis que Cierra";
+            case "leer", "escribir" -> clasificacion = "Funcion";
+            case "fin" -> clasificacion = "Fin del Programa";
+            case "+" -> clasificacion = "Operador Suma";
+            case "-" -> clasificacion = "Operador Resta";
+            case ":" -> clasificacion = "Doble punto";
+            case "(" -> clasificacion = "Parentesis que Abre";
+            case ")" -> clasificacion = "Parentesis que Cierra";
             case ";" -> {
                 clasificacion = "Punto y Coma";
-                bandera = 0;
+                flag = 0;
             }
-            case "=" ->
-                clasificacion = "Asignacion";
-            case "," ->
-                clasificacion = "Coma";
-            default -> {
-                clasificacion = generaTipoDato(lexema);
-            }
+            case "=" -> clasificacion = "Asignacion";
+            case "," -> clasificacion = "Coma";
+            default -> clasificacion = generateDataType(lexema);
+
         }
         return clasificacion;
     }
 
-    private Token generarToken(String lexema, String token, String descripcion,
-            Object atributo, int linea) {
+    private Token generateToken(String lexema, String token, String descripcion,
+                                Object atributo, int linea) {
         Token toke;
         toke = new Token(lexema, token, descripcion, atributo, linea);
-        this.Arreglo[index] = toke;
+        this.array[index] = toke;
         index++;
         return toke;
     }
@@ -180,18 +158,19 @@ public class Lexico {
                         estado = 2;
                         i--;
                     }
-                }case 2 -> {
+                }
+                case 2 -> {
                     if (i < linea.length() && regex.esRESERVADA(lexema)) {
                         Token temp;
-                        temp = generarToken(lexema, "Reservada",
-                                generaDescripcion(lexema),
-                                generaAtributo(lexema), line);
+                        temp = generateToken(lexema, "Reservada",
+                                generateDescription(lexema),
+                                generateAttribute(lexema), line);
                         tokens.add(temp);
                     } else {
                         Token temp;
-                        temp = generarToken(lexema, "Id",
-                                generaDescripcion(lexema),
-                                generaAtributoVariable(lexema),
+                        temp = generateToken(lexema, "Id",
+                                generateDescription(lexema),
+                                generateAttributeId(lexema),
                                 line);
                         tokens.add(temp);
                     }
@@ -249,13 +228,13 @@ public class Lexico {
                 case 6 -> {
                     if (regex.esENTERO(lexema)) {
                         Token temp;
-                        temp = generarToken(lexema, "Entero",
+                        temp = generateToken(lexema, "Entero",
                                 "Entero",
                                 Integer.valueOf(lexema), line);
                         tokens.add(temp);
                     } else if (regex.esFLOTANTE(lexema)) {
                         Token temp;
-                        temp = generarToken(lexema, "Real",
+                        temp = generateToken(lexema, "Real",
                                 "Real",
                                 Double.valueOf(lexema), line);
                         tokens.add(temp);
@@ -267,11 +246,11 @@ public class Lexico {
                 case 7 -> {
                     if (i < linea.length()
                             && regex.esOPERADOR(String.valueOf(
-                                    linea.charAt(i)))) {
+                            linea.charAt(i)))) {
                         lexema += linea.charAt(i);
                         Token temp;
-                        temp = generarToken(lexema, "Caracter Simple",
-                                generaDescripcion(lexema),
+                        temp = generateToken(lexema, "Caracter Simple",
+                                generateDescription(lexema),
                                 (int) lexema.charAt(0), line);
                         tokens.add(temp);
                         estado = 0;
@@ -294,8 +273,8 @@ public class Lexico {
                             && regex.esDELIMITADOR(linea.charAt(i))) {
                         lexema += linea.charAt(i);
                         Token temp;
-                        temp = generarToken(lexema, "Caracter Simple",
-                                generaDescripcion(lexema),
+                        temp = generateToken(lexema, "Caracter Simple",
+                                generateDescription(lexema),
                                 (int) lexema.charAt(0), line);
                         tokens.add(temp);
                         estado = 0;
@@ -327,14 +306,14 @@ public class Lexico {
                 }
                 case 14 -> {
                     Token temp;
-                    temp = generarToken(lexema, "error",
+                    temp = generateToken(lexema, "error",
                             " No pertenece a ninguna categoria lexica "
-                                    + "en la linea "+line,
+                                    + "en la linea " + line,
                             210, line);
-                    errores.add(temp);
+                    errors.add(temp);
                     estado = 0;
                     lexema = "";
-                    i--;
+
                 }
                 case 17 -> {
                     if (i < linea.length()
@@ -347,10 +326,10 @@ public class Lexico {
         }
     }
 
-    public Token getTokenActual() {
-        Token tem = this.Arreglo[this.contador];
-        contador++;
+    public Token getCurrentToken() {
+        Token tem = this.array[this.count];
+        count++;
         return tem;
     }
-   
+
 }

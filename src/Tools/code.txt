@@ -1,0 +1,8 @@
+inicio()
+    entero total, num, edad;
+    leer (edad);
+    num = 13;
+    total = num + edad - 56;
+    escribir (total);
+fin()
+
