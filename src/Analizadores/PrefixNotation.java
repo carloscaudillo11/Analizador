@@ -24,10 +24,10 @@ public class PrefixNotation {
     public void Analyze() {
         getNotation();
         infixToPrefix();
-        printStack();
+        writeFile();
     }
 
-    private void printStack(){
+    private void writeFile(){
         StringBuilder data = new StringBuilder();
         while (!finalStack.isEmpty()) {
             data.append(finalStack.pop().getLexema());
