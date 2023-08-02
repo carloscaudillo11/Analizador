@@ -7,8 +7,8 @@ import java.util.*;
 
 public class PrefixNotation {
     protected Semantic semantic;
-    protected Stack<Token> operatorStack;
-    protected Stack<Token> finalStack;
+    private final Stack<Token> operatorStack;
+    private final Stack<Token> finalStack;
     private final List<Token> list;
     private final File file;
 
@@ -19,62 +19,59 @@ public class PrefixNotation {
         this.operatorStack = new Stack<>();
         this.list = new ArrayList<>();
         this.file = new File();
+        this.file.openFile("src/Tools/prefix.txt");
     }
 
     public void Analyze() {
-        getNotation();
+        getExpression();
         infixToPrefix();
         writeFile();
     }
 
-    private void writeFile(){
+    private void writeFile() {
         StringBuilder data = new StringBuilder();
         while (!finalStack.isEmpty()) {
             data.append(finalStack.pop().getLexema());
             data.append(" ");
         }
-        file.openFile("src/Tools/prefix.txt");
+        // System.out.println(data);
         file.writeFile(data.toString());
     }
 
-    private void search(int line){
+    private void search(int line) {
         Iterator<Token> iterador = semantic.sintactico.lexico.tokens.iterator();
         while (iterador.hasNext()) {
             Token next = iterador.next();
-            if (next.getLinea() == line){
-                if (next.getLexema().equals("=")){
-                    while (iterador.hasNext()) {
-                        Token n = iterador.next();
-                        if (n.getLinea() == line){
-                            if (!n.getLexema().equals(";")){
-                                list.add(n);
-                            }
-                        }
+            if (next.getLinea() == line && next.getLexema().equals("=")) {
+                while (iterador.hasNext()) {
+                    Token n = iterador.next();
+                    if (n.getLinea() == line && !n.getLexema().equals(";")) {
+                        list.add(n);
                     }
                 }
             }
         }
     }
 
-    private void getNotation(){
+    private void getExpression() {
         Iterator<Token> iterador = semantic.sintactico.lexico.tokens.iterator();
         while (iterador.hasNext()) {
             Token next = iterador.next();
-            if (next.getLexema().equals("+") || next.getLexema().equals("-")){
+            if (next.getLexema().equals("+") || next.getLexema().equals("-")) {
                 search(next.getLinea());
                 break;
             }
         }
     }
 
-    private void infixToPrefix(){
+    private void infixToPrefix() {
         Collections.reverse(list);
-        for (Token t: list) {
+        for (Token t : list) {
             if (t.getToken().equals("Id") ||
                     t.getToken().equals("Entero") ||
-                    t.getToken().equals("Real")){
+                    t.getToken().equals("Real")) {
                 finalStack.push(t);
-            }else if (t.getToken().equals("Caracter Simple")){
+            } else if (t.getToken().equals("Caracter Simple")) {
                 operatorStack.push(t);
             }
         }

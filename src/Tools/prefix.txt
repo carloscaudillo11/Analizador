@@ -1,1 +1,1 @@
-+ - + num edad 67 1 
+- + - precio descuento iva 27 

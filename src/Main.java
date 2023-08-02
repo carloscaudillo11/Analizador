@@ -1,4 +1,4 @@
-import Analizadores.PrefixNotation;
+import Analizadores.CodigoIntermedio;
 //import Analizadores.Semantic;
 
 /**
@@ -7,7 +7,7 @@ import Analizadores.PrefixNotation;
  */
 public class Main {
     public static void main(String[] args){
-        PrefixNotation interpret = new PrefixNotation();
-        interpret.Analyze();
+        CodigoIntermedio intermediateCode = new CodigoIntermedio();
+        intermediateCode.Analyze();
     }
 }

@@ -2,18 +2,17 @@ package Analizadores;
 
 import ER.Regex;
 import FilesManagement.File;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class ByteCode {
+public class CodigoIntermedio {
     private final Stack<String> prefixStack;
     private final String[] lines;
     private final Regex regex;
     private final File file;
 
-    public ByteCode() {
+    public CodigoIntermedio() {
         PrefixNotation prefix = new PrefixNotation();
         prefix.Analyze();
         this.prefixStack = new Stack<>();
@@ -194,6 +193,7 @@ public class ByteCode {
         for (String cuarteto : cuartetos) {
             codigo.append(cuarteto).append("\n");
         }
+        System.out.println(codigo);
         writeFile(codigo.toString());
     }
 

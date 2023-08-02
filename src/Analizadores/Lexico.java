@@ -12,13 +12,13 @@ public class Lexico {
 
     private final String[] lines;
     private final Token[] array;
-    public final Regex regex;
+    private final Regex regex;
     private final Map<String, Integer> attributes;
     private final Map<String, String> tipoDato;
     private int count, index, line, attribute, flag;
     public TokensList tokens, errors;
 
-    public Lexico(){
+    public Lexico() {
         File file = new File();
         String ruta = "src/Tools/code.txt";
         file.openFile(ruta);
@@ -54,7 +54,6 @@ public class Lexico {
         tokens.printTokens();
         System.out.println("------------------------------------------------------------------------------------");
     }
-
 
     private int generateAttribute(String lexema) {
         int a = 0;
@@ -127,7 +126,7 @@ public class Lexico {
     }
 
     private Token generateToken(String lexema, String token, String descripcion,
-                                Object atributo, int linea) {
+            Object atributo, int linea) {
         Token toke;
         toke = new Token(lexema, token, descripcion, atributo, linea);
         this.array[index] = toke;
@@ -141,8 +140,7 @@ public class Lexico {
         for (int i = 0; i <= linea.length(); i++) {
             switch (estado) {
                 case 0 -> {
-                    if (i < linea.length() && linea.charAt(i)
-                            >= 'a' && linea.charAt(i) <= 'z') {
+                    if (i < linea.length() && linea.charAt(i) >= 'a' && linea.charAt(i) <= 'z') {
                         lexema += linea.charAt(i);
                         estado = 1;
                     } else {
@@ -207,8 +205,7 @@ public class Lexico {
                     }
                 }
                 case 12 -> {
-                    if (i < linea.length() && linea.charAt(i)
-                            >= '0' && linea.charAt(i) <= '9') {
+                    if (i < linea.length() && linea.charAt(i) >= '0' && linea.charAt(i) <= '9') {
                         lexema += linea.charAt(i);
                         estado = 13;
                     } else {
@@ -246,7 +243,7 @@ public class Lexico {
                 case 7 -> {
                     if (i < linea.length()
                             && regex.esOPERADOR(String.valueOf(
-                            linea.charAt(i)))) {
+                                    linea.charAt(i)))) {
                         lexema += linea.charAt(i);
                         Token temp;
                         temp = generateToken(lexema, "Caracter Simple",
@@ -313,7 +310,6 @@ public class Lexico {
                     errors.add(temp);
                     estado = 0;
                     lexema = "";
-
                 }
                 case 17 -> {
                     if (i < linea.length()

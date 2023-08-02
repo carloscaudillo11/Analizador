@@ -1,8 +1,10 @@
 inicio()
-    entero total, num, edad;
-    leer (edad);
-    num = 13;
-    total = num + edad - 67 + 1;
-    escribir (total);
+    entero total, precio, descuento, iva;
+    leer(descuento);
+    precio = 13;
+    total = precio - descuento + iva - 27;
+    escribir(total);
 fin()
+
+
 

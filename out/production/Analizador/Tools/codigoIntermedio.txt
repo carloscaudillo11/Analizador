@@ -1,4 +1,3 @@
 -	precio	descuento	temp1
 +	temp1	iva	temp2
--	temp2	27	temp3
 
