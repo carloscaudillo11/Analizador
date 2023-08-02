@@ -42,15 +42,11 @@ public class PrefixNotation {
         Iterator<Token> iterador = semantic.sintactico.lexico.tokens.iterator();
         while (iterador.hasNext()) {
             Token next = iterador.next();
-            if (next.getLinea() == line){
-                if (next.getLexema().equals("=")){
-                    while (iterador.hasNext()) {
-                        Token n = iterador.next();
-                        if (n.getLinea() == line){
-                            if (!n.getLexema().equals(";")){
-                                list.add(n);
-                            }
-                        }
+            if (next.getLinea() == line && next.getLexema().equals("=")) {
+                while (iterador.hasNext()) {
+                    Token n = iterador.next();
+                    if (n.getLinea() == line && !n.getLexema().equals(";")) {
+                        list.add(n);
                     }
                 }
             }
